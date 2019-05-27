@@ -1,25 +1,38 @@
 <template>
-  <div>
-    <div id="boardBox" class="boxWrapper">
-      <button @click="restartGame">Recommencer</button>
-      <div class="boardBox" :style="boardBoxClass">
-        <div v-for="(row) in squares" :key="row.id">
-          <div v-for="(square) in row" :key="square.id" class="square">
-            <div class="flipper">
-              <div class="front" @click="selectSquare(square)"
-                :class="[(square.isSelected ? 'background-selected' : 'background-default'), (square.isPossibleMove ? 'background-possibleMove' : '')]">
-                <div :class="{ piece : square.isOccupied}"></div>
+<div class="container-fluid">
+  <div class="row">
+
+    <GameBar @restart-game="restartGame"/>
+  </div>
+  <div class="col-12">
+    <div class="col-6">
+      <!-- <button @click="restartGame">Recommencer</button> -->
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="boxWrapper d-flex align-items-center justify-content-center">
+          <div class="boardBox d-flex" :style="boardBoxClass">
+            <div v-for="(row) in squares" :key="row.id" class="d-flex">
+              <div v-for="(square) in row" :key="square.id"
+                class="squareBox">
+                <div class="square d-flex" @click="selectSquare(square)"
+                  :class="[(square.isSelected ? 'background-selected' : 'background-default'), (square.isPossibleMove ? 'background-possibleMove' : '')]">
+                  <div :class="{ piece : square.isOccupied}"></div>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
+
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
+import GameBar from './GameBar.vue'
+
 export default {
   name: 'BoardBox',
   data: function () {
@@ -33,6 +46,9 @@ export default {
 
     }
   },
+  components: {
+    GameBar
+  },
   //Only for dev purpose
   mounted: function () {
     this.status = 'INIT';
@@ -41,7 +57,7 @@ export default {
     //Define the size of the squares
     boardBoxClass() {
       const nSquare = Math.sqrt(this.pieceNumber); // square nombers
-      const boxSize = `${40 * nSquare}px`; // 40 = square width ( width + margin 2 * 2 )
+      const boxSize = `${44 * nSquare}px`; // 40 = square width ( width + margin 2 * 2 )
       return {
         width: boxSize,
         height: boxSize
@@ -180,76 +196,40 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .boxWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
   height: 476px;
 }
 .boardBox {
-  display: flex;
   flex-wrap: wrap;
-  overflow: hidden;
-  margin-top: -10px;
+  background: #5e4238;
+  /* background: url("../assets/wood.png"); */
+  /* border-radius:5%; */
   padding: 10px;
-  background: #3a2a25;
-  transition: all .2s ease-out;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
-.square {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+.squareBox {
   margin: 2px;
   perspective: 1000px;
-}
-.square .flipper {
-	position: relative;
   width: 36px;
   height: 36px;
-  transition: 0.5s;
-	transform-style: preserve-3d;
 }
-
-.square .flipper .front {
-	position: absolute;
-  overflow: hidden;
-  width: 100%;
+.squareBox .square {
   height: 100%;
-	top: 0;
-	left: 0;
-  backface-visibility: hidden;
 }
-.square .front {
-  z-index: 2;
-  display:flex;
-  transform: rotateX(0deg);
-  
-}
-
 .background-default {
-  background: #714a43;
+  background: #bd9b8f;
 }
-
 .background-selected {
-  background: orange;
+  background: #ffbb33;
 }
-
 .background-possibleMove {
-  background: green;
+  background: #00C851;
 }
-
-.square .front .piece {
+.squareBox .square .piece {
   border-radius: 50%;
   width: 50%;
   height: 50%;
   margin:auto;
   background: white;
 }
-
-/* @media (hover:hover) {
- .square .front:hover {
-    background: #9e7063;
-  }
-} */
-
 </style>

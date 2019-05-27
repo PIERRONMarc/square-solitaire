@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
 
-import BoardBox from './components/BoardBox.vue'
 import CoverScreen from './components/CoverScreen.vue'
+import BoardBox from './components/BoardBox.vue'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
@@ -16,7 +16,7 @@ const router = new VueRouter({
       component: CoverScreen
     },
     {
-      path: '/inGame',
+      path: '/board',
       name: 'BoardBox',
       component: BoardBox
     }
@@ -27,5 +27,4 @@ const router = new VueRouter({
 new Vue({
   render: h => h(App),
   router
-  
 }).$mount('#app')
