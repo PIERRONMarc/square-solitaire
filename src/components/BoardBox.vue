@@ -1,57 +1,57 @@
 <template>
-<div class="container-fluid">
-  <div class="row">
-
-    <GameBar @restart-game="restartGame"/>
-  </div>
-  <div class="col-12">
-    <div class="col-6">
-      <!-- <button @click="restartGame">Recommencer</button> -->
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="boxWrapper d-flex align-items-center justify-content-center">
-          <div class="boardBox d-flex" :style="boardBoxClass">
-            <div v-for="(row) in squares" :key="row.id" class="d-flex">
-              <div v-for="(square) in row" :key="square.id"
-                class="squareBox">
-                <div class="square d-flex" @click="selectSquare(square)"
-                  :class="[(square.isSelected ? 'background-selected' : 'background-default'), (square.isPossibleMove ? 'background-possibleMove' : '')]">
-                  <div :class="{ piece : square.isOccupied}"></div>
+  <div class="container-fluid">
+    <transition name="modal">
+      <VictoryModal v-if="showVictoryModal" @restart-game="restartGame" />
+    </transition>
+    <div id="gamePage" :class="{ blur : showVictoryModal}">
+      <div class="row">
+        <GameBar @restart-game="restartGame" />
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="boxWrapper d-flex align-items-center justify-content-center">
+            <div class="boardBox d-flex" :style="boardBoxClass">
+              <div v-for="(row) in squares" :key="row.id" class="d-flex">
+                <div v-for="(square) in row" :key="square.id" class="squareBox">
+                  <div class="square d-flex" @click="selectSquare(square)"
+                    :class="[(square.isSelected ? 'background-selected' : 'background-default'), (square.isPossibleMove ? 'background-possibleMove' : '')]">
+                    <div :class="{ piece : square.isOccupied}"></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 import GameBar from './GameBar.vue'
+import VictoryModal from './VictoryModal.vue'
+import {mapState, mapMutations} from 'vuex'
 
 export default {
   name: 'BoardBox',
   data: function () {
     return {
-      status: '',
       squares: [],
       lastSquareSelected: null,
       lastPossibleMoves: [],
       pieceNumber: 25,
       pieceLeft: null,
+      showVictoryModal: false
 
     }
   },
   components: {
-    GameBar
+    GameBar,
+    VictoryModal
   },
   //Only for dev purpose
   mounted: function () {
-    this.status = 'INIT';
+    this.setStatus('INIT');
   },
   computed: {
     //Define the size of the squares
@@ -62,7 +62,10 @@ export default {
         width: boxSize,
         height: boxSize
       };
-    }
+    },
+    ...mapState([
+      'status'
+    ])
 
   },
   watch: {
@@ -71,18 +74,25 @@ export default {
       if (this.status == 'INIT') {
         this.squares = this.generateSquares();
         this.pieceLeft = this.pieceNumber;
-        this.status = 'FIRST CLICK';
+        this.setStatus('FIRST CLICK');
+      }
+      if(this.status == 'WIN'){
+        this.showVictoryModal = true;
       }
     },
     pieceLeft(){
       if(this.pieceLeft == 1){
-        this.status = 'WIN';
+        this.setStatus('WIN');
       }
     }
   },
   methods: {
+   ...mapMutations([
+     'setStatus'
+   ]),
     restartGame: function(){
-      this.status = 'INIT';
+      this.setStatus('INIT');
+      this.showVictoryModal = false;
     },
     // When a square is clicked
     selectSquare: function (square) {
@@ -91,7 +101,7 @@ export default {
       if (this.status == 'FIRST CLICK') {
         square.isOccupied = false;
         this.pieceLeft--;
-        this.status = 'IN GAME';
+        this.setStatus('IN GAME');
         return true;
       }
       if (this.status == 'IN GAME') {
@@ -195,6 +205,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.blur {
+  filter:blur(15px);
+  transition-duration: .3s;
+}
+
 .boxWrapper {
   width: 100%;
   height: 476px;
@@ -203,7 +219,7 @@ export default {
   flex-wrap: wrap;
   background: #5e4238;
   /* background: url("../assets/wood.png"); */
-  /* border-radius:5%; */
+  border-radius:5%;
   padding: 10px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }

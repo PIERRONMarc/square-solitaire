@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
+import { store } from './store.js'
 
 import CoverScreen from './components/CoverScreen.vue'
 import BoardBox from './components/BoardBox.vue'
@@ -26,5 +27,6 @@ const router = new VueRouter({
 
 new Vue({
   render: h => h(App),
-  router
+  router, 
+  store
 }).$mount('#app')

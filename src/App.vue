@@ -21,7 +21,7 @@
 
 #app {
   /* font-family: 'Roboto', 'Arial', 'Helvetica', 'sans-serif'; */
-  font-family: 'Montserrat', 'Arial', 'Helvetica', 'sans-serif';
+  font-family: 'Roboto', 'Arial', 'Helvetica', 'sans-serif';
 }
 
 html, body {
