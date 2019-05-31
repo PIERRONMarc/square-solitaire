@@ -5,6 +5,9 @@ import { store } from './store.js'
 
 import CoverScreen from './components/CoverScreen.vue'
 import BoardBox from './components/BoardBox.vue'
+import RankedBoard from './components/RankedBoard.vue'
+
+
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
@@ -20,6 +23,11 @@ const router = new VueRouter({
       path: '/board',
       name: 'BoardBox',
       component: BoardBox
+    },
+    {
+      path: '/ranked',
+      name: 'RankedBoard',
+      component: RankedBoard
     }
     
   ]

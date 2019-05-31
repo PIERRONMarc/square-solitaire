@@ -1,15 +1,16 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid" style="height:100%">
     <transition name="modal">
-      <VictoryModal v-if="showVictoryModal" @restart-game="restartGame" />
+      <VictoryModal v-if="showVictoryModal"/>
+      <PauseModal v-if="showPauseModal" />
     </transition>
-    <div id="gamePage" :class="{ blur : showVictoryModal}">
+    <div id="gamePage" :class="{ blur : showVictoryModal || showPauseModal}" style="height:100%">
       <div class="row">
-        <GameBar @restart-game="restartGame" />
+        <GameBar/>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="boxWrapper d-flex align-items-center justify-content-center">
+      <div class="d-flex justify-content-center align-items-center flex-column" style="height:80%">
+          
+       
             <div class="boardBox d-flex" :style="boardBoxClass">
               <div v-for="(row) in squares" :key="row.id" class="d-flex">
                 <div v-for="(square) in row" :key="square.id" class="squareBox">
@@ -20,9 +21,18 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          
+          <!-- <div class="d-flex ">
+
+         
+            
+            <span class="icon-pause_circle_outline pause" @click="pause()"></span>
+          
+          </div> -->
+
       </div>
+      
+        
     </div>
   </div>
 </template>
@@ -30,7 +40,11 @@
 <script>
 import GameBar from './GameBar.vue'
 import VictoryModal from './VictoryModal.vue'
+import PauseModal from './PauseModal.vue'
 import {mapState, mapMutations} from 'vuex'
+
+// const admob = require("nativescript-admob);
+// import adMob from 'nativescript-admob'
 
 export default {
   name: 'BoardBox',
@@ -41,17 +55,42 @@ export default {
       lastPossibleMoves: [],
       pieceNumber: 25,
       pieceLeft: null,
-      showVictoryModal: false
+      showVictoryModal: false,
+      showPauseModal: false
 
     }
   },
   components: {
     GameBar,
-    VictoryModal
+    VictoryModal,
+    PauseModal
   },
   //Only for dev purpose
   mounted: function () {
     this.setStatus('INIT');
+//     admob.createBanner({
+//     // if this 'view' property is not set, the banner is overlayed on the current top most view
+//     // view: ..,
+//     testing: true, // set to false to get real banners
+//     size: size, // anything in admob.AD_SIZE, like admob.AD_SIZE.SMART_BANNER
+//     // iosBannerId: "ca-app-pub-XXXXXX/YYYYYY", // add your own
+//     androidBannerId: "ca-app-pub-8942917782695946~1887641711", // add your own
+//     // Android automatically adds the connected device as test device with testing:true, iOS does not
+//     // iosTestDeviceIds: ["yourTestDeviceUDIDs", "canBeAddedHere"],
+//     margins: {
+//     // if both are set, top wins
+//     //top: 10
+//     bottom: 50
+//     },
+//     keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
+//     }).then(
+//     function() {
+//     console.log("admob createBanner done");
+//     },
+//     function(error) {
+//     console.log("admob createBanner error: " + error);
+//     }
+// )
   },
   computed: {
     //Define the size of the squares
@@ -64,7 +103,8 @@ export default {
       };
     },
     ...mapState([
-      'status'
+      'status',
+      'chrono'
     ])
 
   },
@@ -72,27 +112,72 @@ export default {
     //Status of the app
     status() {
       if (this.status == 'INIT') {
+        this.runChrono();
+        this.showVictoryModal = false;
         this.squares = this.generateSquares();
         this.pieceLeft = this.pieceNumber;
         this.setStatus('FIRST CLICK');
       }
       if(this.status == 'WIN'){
         this.showVictoryModal = true;
+        let date = new Date();
+        if (localStorage.rank == null) {
+          let rank = [];
+          rank.push({
+            date: date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear(),
+            chrono: {
+              minutes: this.chrono.minutes,
+              seconds: this.chrono.seconds,
+              toString: this.chrono.toString
+            }
+          });
+          // localStorage.setItem("rank", JSON.stringify(rank));
+          localStorage.rank = JSON.stringify(rank);
+        } else {
+          let rank = JSON.parse(localStorage.rank);
+          rank.push({
+            date: date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear(),
+            chrono: {
+              minutes: this.chrono.minutes,
+              seconds: this.chrono.seconds,
+              toString: this.chrono.toString
+            }
+          });
+          // console.log(rank)
+          localStorage.setItem("rank", JSON.stringify(rank));
+        }
+      }
+      if(this.status == 'PAUSE'){
+        this.showPauseModal = true;
+        this.stopChrono();
+      }
+      if(this.status == 'IN GAME'){
+        if(this.pieceLeft == this.pieceNumber){
+          this.setStatus('FIRST CLICK');
+        }
+        this.showPauseModal = false;
+        this.runChrono();
       }
     },
     pieceLeft(){
       if(this.pieceLeft == 1){
         this.setStatus('WIN');
+        this.stopChrono();
+       
       }
     }
   },
   methods: {
    ...mapMutations([
-     'setStatus'
+     'setStatus',
+     'runChrono',
+     'stopChrono'
    ]),
+  //  pause: function() {
+  //    this.setStatus('PAUSE');
+  //  },
     restartGame: function(){
       this.setStatus('INIT');
-      this.showVictoryModal = false;
     },
     // When a square is clicked
     selectSquare: function (square) {
@@ -208,7 +293,13 @@ export default {
 
 .blur {
   filter:blur(15px);
-  transition-duration: .3s;
+  /* transition-duration: .3s ease; */
+}
+
+.pause {
+  color:white;
+  font-size:5em;
+  text-align:center;
 }
 
 .boxWrapper {
@@ -217,8 +308,9 @@ export default {
 }
 .boardBox {
   flex-wrap: wrap;
-  background: #5e4238;
+  /* background: #5e4238; */
   /* background: url("../assets/wood.png"); */
+  background: url("../assets/wood/1.jpg");
   border-radius:5%;
   padding: 10px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
@@ -228,12 +320,15 @@ export default {
   perspective: 1000px;
   width: 36px;
   height: 36px;
+  
 }
 .squareBox .square {
   height: 100%;
+  border-radius:10%;
 }
 .background-default {
-  background: #bd9b8f;
+  /* background: #bd9b8f; */
+  background: url("../assets/wood/1.1.jpg");
 }
 .background-selected {
   background: #ffbb33;

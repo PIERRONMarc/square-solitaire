@@ -2,12 +2,13 @@
   <div class="gameBar container-fluid">
     <div class="row d-flex justify-content-between align-items-center" style="height:100%">
       <div>
-        <router-link to="/"><span class="icon-keyboard_arrow_left back"></span></router-link>
+        <router-link to="/"><span class="icon-keyboard_arrow_left back" @click="stopChrono"></span></router-link>
       </div>
-      <div class="chrono">
+      <div class="chrono" style="">
         {{ chrono.toString }}
       </div>
       <div>
+        <span class="icon-pause pause" @click="pause()"></span>
         <span class="icon-refresh restart" style="color:white" @click="restartGame"></span>
       </div>
     </div>
@@ -15,51 +16,32 @@
 </template>
 
 <script>
-import { setInterval } from 'timers';
+// import { setInterval } from 'timers';
+import {
+  mapState,
+  mapMutations
+} from 'vuex';
+
 export default {
   name: 'GameBar',
-  data: function () {
-    return {
-      chrono: {
-        minutes: 0,
-        seconds: 0,
-        toString: '00 : 00',
-      }
-    }
-  },
-  mounted: function () {
-    // Start the chronometer
-    setInterval(() => {
-      this.chrono.seconds+=1;
-      if (this.chrono.seconds === 60) {
-          this.chrono.seconds = 0;
-          this.chrono.minutes = this.chrono.minutes + 1;
-      }
-      this.chronoToString();
-    }, 1000);
+  computed: {
+    ...mapState([
+      'status',
+      'chrono'
+    ])
   },
   methods: {
+    ...mapMutations([
+      'setStatus',
+      'resetChrono',
+      'stopChrono'
+    ]),
     restartGame: function () {
-      this.$emit('restart-game');
-      this.chrono.seconds = 0;
-      this.chrono.minutes = 0;
-      this.chrono.toString = '00 : 00'
+      this.setStatus('INIT');
+      this.resetChrono();
     },
-    chronoToString: function () {
-      let minutes = this.chrono.minutes;
-      let seconds = this.chrono.seconds;
-
-      this.chrono.toString = minutes + ' : ' + seconds;
-      
-      if(minutes < 10){
-        this.chrono.toString = '0' + minutes + ' : ' + seconds;
-      }
-      if(seconds < 10){
-        this.chrono.toString = minutes + ' : 0' + seconds;
-      }
-      if(seconds < 10 && minutes < 10){
-        this.chrono.toString = '0' + minutes + ' : 0' + seconds;
-      }
+    pause: function () {
+      this.setStatus('PAUSE');
     },
   }
 }
@@ -68,6 +50,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+.pause {
+  color:white;
+  font-size:2em;
+}
 
 .back {
   margin-left:10px;
@@ -84,6 +70,9 @@ export default {
 .chrono {
   color: white;
   font-family: 'Montserrat', 'Arial', 'Helvetica', 'sans-serif';
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 a{

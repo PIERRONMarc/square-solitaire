@@ -8,6 +8,7 @@
 </template>
 
 <script>
+const admob = require("nativescript-admob");
   export default {
     name: 'app',
   }
@@ -22,6 +23,7 @@
 #app {
   /* font-family: 'Roboto', 'Arial', 'Helvetica', 'sans-serif'; */
   font-family: 'Roboto', 'Arial', 'Helvetica', 'sans-serif';
+  height:100%;
 }
 
 html, body {
@@ -43,4 +45,18 @@ html, body {
 .fade-enter, .fade-leave-active {
   opacity: 0
 }
+
+/* Prevent landscape mode which is not designed yet */
+/* @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+  html {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    width: 100vh;
+    overflow-x: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+} */
+
 </style>

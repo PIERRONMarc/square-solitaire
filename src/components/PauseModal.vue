@@ -1,26 +1,22 @@
 <template>
-
-        <div class="modal">
-            <div class="modal-mask">
-                <div class="modal-wrapper">
-                    <div class="modal-container d-flex justify-content-center align-items-center flex-column">
-                        <div class="modal-header">
-                            <p>You win !</p>
-                        </div>
-                        <div class="modal-body">
-                            <p>Temps : <span style="margin-left:30px">{{ chrono.toString }}</span></p>
-                        </div>
-                        <div class="modal-footer d-flex flex-row">
-                            <button @click="restartGame">Rejouer</button>
-                            <button style="margin-left:30px">Noter l'app</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div>
+    <div class="modal">
+      <div class="modal-mask">
+        <div class="chronoWrapper row d-flex align-items-center">
+          <div class="chrono">
+            {{ chrono.toString }}
+          </div>
         </div>
-
-
-    
+        <div class="modal-wrapper">
+          <div class="modal-container">
+            <div class="modal-body">
+              <span class="icon-play_circle_outline" @click="back()"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -28,21 +24,19 @@
 import {mapState, mapMutations} from 'vuex';
 
 export default {
-  name: 'VictoryModal',
+  name: 'PauseModal',
   computed: {
     ...mapState([
-      'chrono',
-      'status'
+      'status',
+      'chrono'
     ])
   },
   methods: {
     ...mapMutations([
       'setStatus',
-      'resetChrono'
     ]),
-    restartGame: function () {
-        this.setStatus('INIT');
-        this.resetChrono();
+    back: function () {
+        this.setStatus('IN GAME');
     }   
   }
 }
@@ -51,6 +45,23 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+.chrono {
+  color: white;
+  font-family: 'Montserrat', 'Arial', 'Helvetica', 'sans-serif';
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+
+}
+
+.chronoWrapper {
+  width: 100%;
+  height: 40px;
+  position:fixed;
+  opacity: 1;
+  /* background: #5e4238; */
+  /* box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); */
+}
 
 .modal-mask {
   position: fixed;
@@ -70,9 +81,8 @@ export default {
 
 .modal-container {
   width: 100%;
-  height:100%;
-  /* margin: 0px auto; */
-  /* padding: 20px 30px; */
+  margin: 0px auto;
+  padding: 20px 30px;
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
@@ -83,14 +93,12 @@ export default {
   text-align:center;
   text-transform: uppercase;
   font-weight:bold;
-  margin-bottom: 10%;
 }
 
 .modal-body {
-  font-size: 2em;
+  font-size: 10em;
   color: #ffffff;
   text-align:center;
-  margin-bottom: 10%;
 }
 
 .modal-footer {
@@ -100,20 +108,24 @@ export default {
 }
 
 .modal-container button {
-  padding: 1rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  text-align: center;
-  text-shadow: none;
-  background-color: #bd9b8f;
-  color: #fff;
+  margin-top: 35px;
+  width: 150px;
+  height: 50px;
   border: 1px solid #ccc;
   border-width: 0 0 2px 0;
   border-radius: 4px;
   border-bottom-color: #5e4238;
+  color: #fff;
+  background-color: #bd9b8f;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: none;
+  line-height: 50px;
+  letter-spacing: 1px;
+  box-shadow: inset 0 -2px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
   outline: none;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); 
-  margin-top: 35px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
 /*
