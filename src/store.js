@@ -12,9 +12,17 @@ export const store = new Vuex.Store({
             toString: '00 : 00',
             idInterval: 0,
             running: false
-        }
+        },
+        stars:0,
+        userInterface: null
     },
     mutations: {
+        setUserInterface(state, payload){
+            state.userInterface = payload;
+        },
+        addStars(state, number){
+            state.stars = state.stars + number;
+        },
         setStatus(state, payload) {
             state.status = payload;
         },

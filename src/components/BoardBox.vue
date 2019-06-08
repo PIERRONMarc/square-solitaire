@@ -9,30 +9,17 @@
         <GameBar/>
       </div>
       <div class="d-flex justify-content-center align-items-center flex-column" style="height:80%">
-          
-       
-            <div class="boardBox d-flex" :style="boardBoxClass">
-              <div v-for="(row) in squares" :key="row.id" class="d-flex">
-                <div v-for="(square) in row" :key="square.id" class="squareBox">
-                  <div class="square d-flex" @click="selectSquare(square)"
-                    :class="[(square.isSelected ? 'background-selected' : 'background-default'), (square.isPossibleMove ? 'background-possibleMove' : '')]">
-                    <div :class="{ piece : square.isOccupied}"></div>
-                  </div>
-                </div>
+        <div class="boardBox d-flex" :style="[boardBoxClass, {background: userInterface.boardBackground}]">
+          <div v-for="(row) in squares" :key="row.id" class="d-flex">
+            <div v-for="(square) in row" :key="square.id" class="squareBox">
+              <div class="square d-flex" @click="selectSquare(square)"
+                 :style="[square.isSelected ? {'background': '#ffbb33'}:{'background': userInterface.squareBackground},square.isPossibleMove ? {'background': '#00C851'}:'' ]">
+                <div :class="{ piece : square.isOccupied}"></div>
               </div>
             </div>
-          
-          <!-- <div class="d-flex ">
-
-         
-            
-            <span class="icon-pause_circle_outline pause" @click="pause()"></span>
-          
-          </div> -->
-
+          </div>
+        </div>
       </div>
-      
-        
     </div>
   </div>
 </template>
@@ -42,9 +29,6 @@ import GameBar from './GameBar.vue'
 import VictoryModal from './VictoryModal.vue'
 import PauseModal from './PauseModal.vue'
 import {mapState, mapMutations} from 'vuex'
-
-// const admob = require("nativescript-admob);
-// import adMob from 'nativescript-admob'
 
 export default {
   name: 'BoardBox',
@@ -68,29 +52,6 @@ export default {
   //Only for dev purpose
   mounted: function () {
     this.setStatus('INIT');
-//     admob.createBanner({
-//     // if this 'view' property is not set, the banner is overlayed on the current top most view
-//     // view: ..,
-//     testing: true, // set to false to get real banners
-//     size: size, // anything in admob.AD_SIZE, like admob.AD_SIZE.SMART_BANNER
-//     // iosBannerId: "ca-app-pub-XXXXXX/YYYYYY", // add your own
-//     androidBannerId: "ca-app-pub-8942917782695946~1887641711", // add your own
-//     // Android automatically adds the connected device as test device with testing:true, iOS does not
-//     // iosTestDeviceIds: ["yourTestDeviceUDIDs", "canBeAddedHere"],
-//     margins: {
-//     // if both are set, top wins
-//     //top: 10
-//     bottom: 50
-//     },
-//     keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
-//     }).then(
-//     function() {
-//     console.log("admob createBanner done");
-//     },
-//     function(error) {
-//     console.log("admob createBanner error: " + error);
-//     }
-// )
   },
   computed: {
     //Define the size of the squares
@@ -104,7 +65,9 @@ export default {
     },
     ...mapState([
       'status',
-      'chrono'
+      'chrono',
+      'stars',
+      'userInterface'
     ])
 
   },
@@ -115,10 +78,18 @@ export default {
         this.runChrono();
         this.showVictoryModal = false;
         this.squares = this.generateSquares();
+        //adding reward
+        if(this.pieceLeft != null){
+          let stars = this.pieceNumber - this.pieceLeft;
+          this.addStars(stars);
+          localStorage.stars = JSON.stringify(this.stars); 
+        }
         this.pieceLeft = this.pieceNumber;
         this.setStatus('FIRST CLICK');
       }
       if(this.status == 'WIN'){
+        this.addStars(25);
+        localStorage.stars = JSON.stringify(this.stars); 
         this.showVictoryModal = true;
         let date = new Date();
         if (localStorage.rank == null) {
@@ -171,7 +142,8 @@ export default {
    ...mapMutations([
      'setStatus',
      'runChrono',
-     'stopChrono'
+     'stopChrono',
+     'addStars'
    ]),
   //  pause: function() {
   //    this.setStatus('PAUSE');

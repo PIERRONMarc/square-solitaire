@@ -5,21 +5,28 @@
     </div>
     <div>
       <router-link to="/board">
-        <button>
+        <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
           Nouvelle partie
         </button>
       </router-link>
     </div>
     <div>
       <router-link to="/ranked">
-        <button>
+        <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
           Mes records
         </button>
       </router-link>
     </div>
     <div>
+      <router-link to="/customization">
+        <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
+          Customisation
+        </button>
+      </router-link>
+    </div>
+    <div>
       <router-link to="/rules">
-        <button>
+        <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
           Comment jouer
         </button>
       </router-link>
@@ -29,8 +36,16 @@
 </template>
 
 <script>
+
+  import { mapState } from 'vuex';
+
   export default {
-    name: 'CoverScreen'
+    name: 'CoverScreen',
+    computed: {
+    ...mapState([
+      'userInterface'
+    ])
+  },
   }
 </script>
 

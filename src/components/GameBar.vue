@@ -1,11 +1,11 @@
 <template>
-  <div class="gameBar container-fluid">
+  <div class="gameBar container-fluid" :style="{background: userInterface.pDarkColor}">
     <div class="row d-flex justify-content-between align-items-center" style="height:100%">
       <div>
         <router-link to="/"><span class="icon-keyboard_arrow_left back" @click="stopChrono"></span></router-link>
       </div>
-      <div class="chrono" style="">
-        {{ chrono.toString }}
+      <div class="chrono">
+        {{ chrono.toString }} | {{ stars }} <span class="icon icon-star"></span>
       </div>
       <div>
         <span class="icon-pause pause" @click="pause()"></span>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-// import { setInterval } from 'timers';
+
 import {
   mapState,
   mapMutations
@@ -27,7 +27,9 @@ export default {
   computed: {
     ...mapState([
       'status',
-      'chrono'
+      'chrono',
+      'stars',
+      'userInterface'
     ])
   },
   methods: {

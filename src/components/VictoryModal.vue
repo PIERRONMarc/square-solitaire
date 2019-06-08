@@ -11,8 +11,8 @@
                             <p>Temps : <span style="margin-left:30px">{{ chrono.toString }}</span></p>
                         </div>
                         <div class="modal-footer d-flex flex-row">
-                            <button @click="restartGame">Rejouer</button>
-                            <button style="margin-left:30px">Noter l'app</button>
+                            <button @click="restartGame" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Rejouer</button>
+                            <button style="margin-left:30px" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Noter l'app</button>
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,8 @@ export default {
   computed: {
     ...mapState([
       'chrono',
-      'status'
+      'status',
+      'userInterface'
     ])
   },
   methods: {

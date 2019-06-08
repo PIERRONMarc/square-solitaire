@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid rankedBoard" style="height:100%">
 
-    <div class="row NavBar d-flex justify-content-between align-items-center">
+    <div class="row NavBar d-flex justify-content-between align-items-center" :style="{background: userInterface.pDarkColor}">
       <div>
         <router-link to="/"><span class="icon-keyboard_arrow_left back"></span></router-link>
       </div>
@@ -23,7 +23,7 @@
       </div>
       <div v-for="(r, index) in rank" :key="r.id">
         <div class="row record"
-          :class="{ 'background-first' : index == 0, 'background-second' : index == 1, 'background-third': index == 2, 'background-default': index > 2}">
+          :class="{ 'background-first' : index == 0, 'background-second' : index == 1, 'background-third': index == 2}" :style="[index > 2 ? {background: userInterface.pDarkColor}:null]">
           <div class="col d-flex justify-content-center">
             #{{index + 1}}
           </div>
@@ -44,12 +44,19 @@
 
 <script>
 
+import { mapState } from 'vuex';
+
 export default {
   name: 'RankedBoard',
   data: function () {
     return {
       rank: []
     }
+  },
+  computed: {
+    ...mapState([
+      'userInterface'
+    ])
   },
   mounted: function () {
     if(localStorage.rank != null){
