@@ -1,15 +1,7 @@
 <template>
   <div class="container-fluid rankedBoard" style="height:100%">
-
-    <div class="row NavBar d-flex justify-content-between align-items-center" :style="{background: userInterface.pDarkColor}">
-      <div>
-        <router-link to="/"><span class="icon-keyboard_arrow_left back"></span></router-link>
-      </div>
-      <div class="title">
-        Mes records
-      </div>
-    </div>
-    <div v-if="rank != null">
+    <NavBar typeNavBar="rankedBar" />
+    <div v-if="rank !== null">
       <div class="row" style="margin-top:8%;">
         <div class="col d-flex justify-content-center">
           <h2></h2>
@@ -45,6 +37,7 @@
 <script>
 
 import { mapState } from 'vuex';
+import NavBar from './NavBar.vue';
 
 export default {
   name: 'RankedBoard',
@@ -52,6 +45,9 @@ export default {
     return {
       rank: []
     }
+  },
+  components:{
+    NavBar
   },
   computed: {
     ...mapState([
@@ -74,6 +70,8 @@ export default {
           return 0;
         }
       });
+    }else{
+      this.rank = null;
     }
   }
 }

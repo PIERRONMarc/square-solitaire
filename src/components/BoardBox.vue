@@ -1,19 +1,17 @@
 <template>
   <div class="container-fluid" style="height:100%">
     <transition name="modal">
-      <VictoryModal v-if="showVictoryModal"/>
+      <VictoryModal v-if="showVictoryModal" />
       <PauseModal v-if="showPauseModal" />
     </transition>
     <div id="gamePage" :class="{ blur : showVictoryModal || showPauseModal}" style="height:100%">
-      <div class="row">
-        <GameBar/>
-      </div>
+      <NavBar typeNavBar="gameBar" />
       <div class="d-flex justify-content-center align-items-center flex-column" style="height:80%">
         <div class="boardBox d-flex" :style="[boardBoxClass, {background: userInterface.boardBackground}]">
           <div v-for="(row) in squares" :key="row.id" class="d-flex">
             <div v-for="(square) in row" :key="square.id" class="squareBox">
               <div class="square d-flex" @click="selectSquare(square)"
-                 :style="[square.isSelected ? {'background': '#ffbb33'}:{'background': userInterface.squareBackground},square.isPossibleMove ? {'background': '#00C851'}:'' ]">
+                :style="[square.isSelected ? {'background': '#ffbb33'}:{'background': userInterface.squareBackground},square.isPossibleMove ? {'background': '#00C851'}:'' ]">
                 <div :class="{ piece : square.isOccupied}"></div>
               </div>
             </div>
@@ -25,7 +23,7 @@
 </template>
 
 <script>
-import GameBar from './GameBar.vue'
+import NavBar from './NavBar.vue'
 import VictoryModal from './VictoryModal.vue'
 import PauseModal from './PauseModal.vue'
 import {mapState, mapMutations} from 'vuex'
@@ -45,9 +43,9 @@ export default {
     }
   },
   components: {
-    GameBar,
     VictoryModal,
-    PauseModal
+    PauseModal,
+    NavBar
   },
   //Only for dev purpose
   mounted: function () {

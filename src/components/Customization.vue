@@ -1,18 +1,7 @@
 <template>
   <div class="container-fluid" style="height:100%">
     <div id="customizationPage" style="height:100%">
-      <div class="row NavBar d-flex justify-content-between align-items-center"
-        :style="{background: userInterface.pDarkColor}">
-        <div>
-          <router-link to="/"><span class="icon-keyboard_arrow_left back"></span></router-link>
-        </div>
-        <div class="title">
-          Customisation
-        </div>
-        <div style="margin-right:10px">
-          {{ stars }} <span class="icon icon-star"></span>
-        </div>
-      </div>
+      <NavBar typeNavBar="customizationBar"/>
       <div class="d-flex justify-content-center align-items-center flex-column" style="height:80%">
         <div class="boardBox d-flex" :style="[boardBoxClass, {background: userInterface.boardBackground}]">
           <div v-for="(row) in squares" :key="row.id" class="d-flex">
@@ -28,7 +17,7 @@
         </vueper-slides>
         <div>
           <div v-if="currentUi.state === 'unlocked' || currentUi.state === 'currentlyUsed'" @click="selectUi()">
-            <div class="container" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}" :class="{active : currentUi.state == 'currentlyUsed'}">
+            <div class="container test" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}" :class="{active : currentUi.state == 'currentlyUsed'}">
               <span class="text">Appliquer</span>
               <span class="icon-check ok"></span>
             </div>
@@ -45,6 +34,7 @@
 </template>
 
 <script>
+import NavBar from './NavBar.vue';
 import {
   mapState,
   mapMutations
@@ -81,7 +71,8 @@ export default {
   },
   components: {
     VueperSlides,
-    VueperSlide
+    VueperSlide,
+    NavBar
   },
   computed: {
     //Define the size of the squares
