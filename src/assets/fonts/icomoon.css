@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('icons/icomoon.eot?rpclgr');
-  src:  url('icons/icomoon.eot?rpclgr#iefix') format('embedded-opentype'),
-    url('icons/icomoon.ttf?rpclgr') format('truetype'),
-    url('icons/icomoon.woff?rpclgr') format('woff'),
-    url('icons/icomoon.svg?rpclgr#icomoon') format('svg');
+  src:  url('icons/icomoon.eot?ekb7a9');
+  src:  url('icons/icomoon.eot?ekb7a9#iefix') format('embedded-opentype'),
+    url('icons/icomoon.ttf?ekb7a9') format('truetype'),
+    url('icons/icomoon.woff?ekb7a9') format('woff'),
+    url('icons/icomoon.svg?ekb7a9#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -36,6 +36,9 @@
 .icon-keyboard_arrow_left:before {
   content: "\e314";
 }
+.icon-keyboard_arrow_right:before {
+  content: "\e315";
+}
 .icon-pause:before {
   content: "\e034";
 }
@@ -59,4 +62,7 @@
 }
 .icon-star_border:before {
   content: "\e83a";
+}
+.icon-timer:before {
+  content: "\e425";
 }

@@ -50,6 +50,7 @@ export default {
   //Only for dev purpose
   mounted: function () {
     this.setStatus('INIT');
+    // this.setStatus('WIN');
   },
   computed: {
     //Define the size of the squares
@@ -65,7 +66,8 @@ export default {
       'status',
       'chrono',
       'stars',
-      'userInterface'
+      'userInterface',
+      'winningStars'
     ])
 
   },
@@ -79,14 +81,16 @@ export default {
         //adding reward
         if(this.pieceLeft != null){
           let stars = this.pieceNumber - this.pieceLeft;
-          this.addStars(stars);
+          if(this.pieceLeft != 1){
+            this.addStars(stars);
+          }
           localStorage.stars = JSON.stringify(this.stars); 
         }
         this.pieceLeft = this.pieceNumber;
         this.setStatus('FIRST CLICK');
       }
       if(this.status == 'WIN'){
-        this.addStars(25);
+        this.addStars(100);
         localStorage.stars = JSON.stringify(this.stars); 
         this.showVictoryModal = true;
         let date = new Date();

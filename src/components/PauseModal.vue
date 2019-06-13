@@ -4,7 +4,7 @@
       <div class="modal-mask">
         <div class="chronoWrapper row d-flex align-items-center">
           <div class="chrono">
-            {{ chrono.toString }}
+            <p>{{ chrono.toString }} <span style="margin: 0px 10px 0px 10px">|</span> {{ stars }} <span class="icon icon-star"></span></p>
           </div>
         </div>
         <div class="modal-wrapper">
@@ -28,7 +28,8 @@ export default {
   computed: {
     ...mapState([
       'status',
-      'chrono'
+      'chrono',
+      'stars'
     ])
   },
   methods: {

@@ -6,7 +6,7 @@
                 </router-link>
             </div>
             <div class="title">
-                {{ chrono.toString }} | {{ stars }} <span class="icon icon-star"></span>
+                <p>{{ chrono.toString }} <span style="margin: 0px 10px 0px 10px">|</span> {{ stars }} <span class="icon icon-star"></span></p>
             </div>
             <div>
                 <span class="icon-pause pause" @click="pause()"></span>
@@ -50,7 +50,8 @@ export default {
       'status',
       'chrono',
       'stars',
-      'userInterface'
+      'userInterface',
+      
     ])
   },
   props: ['typeNavBar'],

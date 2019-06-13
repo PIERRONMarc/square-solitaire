@@ -1,39 +1,46 @@
 <template>
-
-        <div class="modal">
-            <div class="modal-mask">
-                <div class="modal-wrapper">
-                    <div class="modal-container d-flex justify-content-center align-items-center flex-column">
-                        <div class="modal-header">
-                            <p>You win !</p>
-                        </div>
-                        <div class="modal-body">
-                            <p>Temps : <span style="margin-left:30px">{{ chrono.toString }}</span></p>
-                        </div>
-                        <div class="modal-footer d-flex flex-row">
-                            <button @click="restartGame" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Rejouer</button>
-                            <button style="margin-left:30px" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Noter l'app</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container d-flex justify-content-center align-items-center flex-column">
+          <div class="modal-header">
+            <h3 class="ribbon">
+              <strong class="ribbon-inner">Victoire !</strong>
+            </h3>
+          </div>
+          <div class="modal-body">
+            <p>
+              <span class="icon-timer icon"></span><span>{{ chrono.toString }}</span><br>
+              <span class="icon-star icon"></span><span>+ 100</span>
+            </p>
+          </div>
+          <div class="modal-footer d-flex flex-row">
+            <button @click="restartGame" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Rejouer</button>
+            <button style="margin-left:30px" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Noter l'app</button>
+          </div>
         </div>
-
-
-    
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 
 import {mapState, mapMutations} from 'vuex';
+// require('canvas-confetti');
 
 export default {
   name: 'VictoryModal',
+  data: function () {
+    return {
+      idIntervalConfetti: null
+    }
+  },
   computed: {
     ...mapState([
       'chrono',
       'status',
-      'userInterface'
+      'userInterface',
     ])
   },
   methods: {
@@ -42,9 +49,30 @@ export default {
       'resetChrono'
     ]),
     restartGame: function () {
-        this.setStatus('INIT');
-        this.resetChrono();
-    }   
+      this.setStatus('INIT');
+      this.resetChrono();
+      clearInterval(this.idIntervalConfetti);
+    }
+  },
+  mounted: function () {
+    let end = Date.now() + (15 * 1000);
+
+    this.idIntervalConfetti = setInterval(function () {
+      if (Date.now() > end) {
+        return clearInterval(this.idIntervalConfetti);
+      }
+
+      confetti({
+        startVelocity: 25,
+        spread: 360,
+        ticks: 60,
+        origin: {
+          x: Math.random(),
+          // since they fall down, start a bit higher than random
+          y: Math.random() - 0.2
+        }
+      });
+    }, 200);
   }
 }
 </script>
@@ -52,6 +80,69 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+/* RIBBON */
+
+.ribbon {
+  font-family: 'Montserrat', 'Arial', 'Helvetica', 'sans-serif';
+  font-size: 20px!important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  width: 70%;
+  position: relative;
+  background: #f35b5b;
+  color: #fff;
+  text-align: center;
+  padding: 1em 2em;
+  margin: 1em auto 2em
+}
+
+.ribbon:after,
+.ribbon:before {
+  content: "";
+  position: absolute;
+  display: block;
+  bottom: -1em;
+  border: 1.5em solid #d74545;
+  z-index: -1
+}
+
+.ribbon:before {
+  left: -2em;
+  border-right-width: 1.5em;
+  border-left-color: transparent
+}
+
+.ribbon:after {
+  right: -2em;
+  border-left-width: 1.5em;
+  border-right-color: transparent
+}
+
+.ribbon .ribbon-inner:after,
+.ribbon .ribbon-inner:before {
+  content: "";
+  position: absolute;
+  display: block;
+  border-style: solid;
+  border-color: #b23232 transparent transparent;
+  bottom: -1em
+}
+
+.ribbon .ribbon-inner:before {
+  left: 0;
+  border-width: 1em 0 0 1em
+}
+
+.ribbon .ribbon-inner:after {
+  right: 0;
+  border-width: 1em 1em 0 0
+}
+
+/* RIBBON */
+
+.icon{
+  margin-right:30px;
+}
 
 .modal-mask {
   position: fixed;
@@ -72,8 +163,6 @@ export default {
 .modal-container {
   width: 100%;
   height:100%;
-  /* margin: 0px auto; */
-  /* padding: 20px 30px; */
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
@@ -82,16 +171,15 @@ export default {
   font-size: 3em;
   color: #ffffff;
   text-align:center;
-  text-transform: uppercase;
   font-weight:bold;
-  margin-bottom: 10%;
+  width:100%;
 }
 
 .modal-body {
-  font-size: 2em;
+  font-family: 'Montserrat', 'Arial', 'Helvetica', 'sans-serif';
+  font-size: 1.5em;
   color: #ffffff;
-  text-align:center;
-  margin-bottom: 10%;
+  text-align:left;
 }
 
 .modal-footer {

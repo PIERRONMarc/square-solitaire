@@ -23,7 +23,7 @@
             </div>
           </div>
           <div v-else-if="currentUi.state === 'locked'">
-            <button class="btn" style="background:#e94948;border-bottom-color:#b00020">
+            <button class="btn animated" style="background:#e94948;border-bottom-color:#b00020" @click="e => e.target.classList.toggle('shake')">
               {{ customizations[currentUi.name].starsRequired}} étoiles requises <span class="icon icon-lock" style="color:white;font-size:1em"></span>
             </button>
           </div>
@@ -121,14 +121,7 @@ export default {
       for (let i = 0; i < Math.round(Math.sqrt(this.pieceNumber)); i++) {
         squares[i] = new Array();
         for (let j = 0; j < Math.round(Math.sqrt(this.pieceNumber)); j++) {
-          squares[i][j] = {
-            id: count,
-            y_axis: j,
-            x_axis: i,
-            isOccupied: true,
-            isSelected: false,
-            isPossibleMove: false
-          }
+          squares[i][j] = {isOccupied: true}
           count++;
         }
       }

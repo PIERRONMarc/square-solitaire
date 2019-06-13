@@ -97,9 +97,6 @@ export default {
   background: #cd7f32;
 }
 
-.background-default{
-  background: #bd9b8f;
-}
 .rankedBoard{
   color:white;
   text-transform: uppercase;
@@ -115,19 +112,4 @@ export default {
   border-radius:3px;
 }
 
-.NavBar {
-    /* width: 100%; */
-    height: 40px;
-    background: #5e4238;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
-.back {
-  margin-left:10px;
-  font-size: 2em; 
-  color:white;
-}
-a{
-  text-decoration: none;
-}
 </style>

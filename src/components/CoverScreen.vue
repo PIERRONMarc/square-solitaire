@@ -4,30 +4,33 @@
       <p>Titre</p>
     </div>
     <div>
+       
       <router-link to="/board">
         <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
-          Nouvelle partie
-        </button>
+          Nouvelle partie <span class="icon-keyboard_arrow_right"></span>
+        </button> 
       </router-link>
+      
+       
     </div>
     <div>
       <router-link to="/ranked">
         <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
-          Mes records
+          Mes records <span class="icon-keyboard_arrow_right"></span>
         </button>
       </router-link>
     </div>
     <div>
       <router-link to="/customization">
         <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
-          Customisation
+          Customisation <span class="icon-keyboard_arrow_right"></span>
         </button>
       </router-link>
     </div>
     <div>
       <router-link to="/rules">
         <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
-          Comment jouer
+          Comment jouer <span class="icon-keyboard_arrow_right"></span>
         </button>
       </router-link>
 
@@ -78,7 +81,7 @@
 
   .coverScreen button {
     margin-top: 35px;
-    width: 150px;
+    width: 170px;
     height: 50px;
     border: 1px solid #ccc;
     border-width: 0 0 2px 0;
@@ -95,6 +98,10 @@
     cursor: pointer;
     outline: none;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  }
+
+  span{
+    font-size:1.1em;
   }
 
   .coverScreen button:hover {
