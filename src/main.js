@@ -61,23 +61,15 @@ const vueApp = new Vue({
     },
     showBannerAds: function () {
       const bannerConfig = {
-        // id: 'ca-app-pub-8942917782695946/9712013613', real id
-        id: 'ca-app-pub-3940256099942544/6300978111', //test id
-        isTesting: true,
+        id: 'ca-app-pub-8942917782695946/9712013613', //real id
+        // id: 'ca-app-pub-3940256099942544/6300978111', //test id
+        // isTesting: true,
         autoShow: true,
         bannerAtTop:true
       }
       admob.banner.config(bannerConfig);
 
-      admob.banner.prepare()
-        .then(() => {
-          // admob.banner.show();
-          // this.admob.banner.show();
-          // console.log('start to show the banner as..');
-        })
-        .catch(err => {
-          // console.log('show banner ads error: ', err);
-        });
+      admob.banner.prepare();
 
 
     }

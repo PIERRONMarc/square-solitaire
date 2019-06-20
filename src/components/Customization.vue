@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div id="customizationPage">
-      <NavBar typeNavBar="customizationBar" title="Customisation" />
+      <NavBar typeNavBar="customizationBar" title="Personnalisation" />
       <div class="d-flex justify-content-center align-items-center flex-column flex-wrap wrapper">
         <div class="boardBox d-flex" :style="[boardBoxClass, {background: userInterface.boardBackground}]">
           <div v-for="(row) in squares" :key="row.id" class="d-flex">

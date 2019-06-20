@@ -8,7 +8,7 @@
       </p>
       <p>
         Pour chaque pion retiré du jeu vous gagné une étoile. Les étoiles servent à débloquer de nouvelles <router-link
-          to="/customization" :style="{color: userInterface.pDarkColor}">personnalisation</router-link>.
+          to="/customization" :style="{color: userInterface.pDarkColor}">personnalisations</router-link>.
       </p>
     </div>
   </div>
