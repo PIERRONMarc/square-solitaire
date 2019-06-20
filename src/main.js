@@ -7,8 +7,7 @@ import CoverScreen from './components/CoverScreen.vue'
 import BoardBox from './components/BoardBox.vue'
 import RankedBoard from './components/RankedBoard.vue'
 import Customization from './components/Customization.vue'
-
-
+import Rules from './components/Rules.vue'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
@@ -34,17 +33,30 @@ const router = new VueRouter({
       path: '/customization',
       name: 'Customization',
       component: Customization
+    },
+    {
+      path: '/rules',
+      name: 'Rules',
+      component: Rules
     }
-    
+
   ]
+})
+
+//register the previous route
+router.beforeEach((to, from, next) => {
+  store.state.prevRoute = from.name
+  next()
 })
 
 const vueApp = new Vue({
   render: h => h(App),
-  router, 
+  router,
   store,
   methods: {
     onDeviceReady: function () {
+      // lock the device orientation because landscape is badly supported
+      screen.orientation.lock('portrait')
       this.showBannerAds();
     },
     showBannerAds: function () {
@@ -52,7 +64,8 @@ const vueApp = new Vue({
         // id: 'ca-app-pub-8942917782695946/9712013613', real id
         id: 'ca-app-pub-3940256099942544/6300978111', //test id
         isTesting: true,
-        autoShow: true
+        autoShow: true,
+        bannerAtTop:true
       }
       admob.banner.config(bannerConfig);
 
@@ -60,20 +73,20 @@ const vueApp = new Vue({
         .then(() => {
           // admob.banner.show();
           // this.admob.banner.show();
-          console.log('start to show the banner as..');
+          // console.log('start to show the banner as..');
         })
         .catch(err => {
-          console.log('show banner ads error: ', err);
+          // console.log('show banner ads error: ', err);
         });
 
-      
+
     }
   }
 }).$mount('#app')
 
 document.addEventListener(
   'deviceready',
-  function() {
+  function () {
     vueApp.onDeviceReady();
   },
   false

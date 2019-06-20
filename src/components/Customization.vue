@@ -1,8 +1,8 @@
 <template>
-  <div class="container-fluid" style="height:100%">
-    <div id="customizationPage" style="height:100%">
-      <NavBar typeNavBar="customizationBar"/>
-      <div class="d-flex justify-content-center align-items-center flex-column" style="height:80%">
+  <div class="container-fluid">
+    <div id="customizationPage">
+      <NavBar typeNavBar="customizationBar" title="Customisation" />
+      <div class="d-flex justify-content-center align-items-center flex-column flex-wrap wrapper">
         <div class="boardBox d-flex" :style="[boardBoxClass, {background: userInterface.boardBackground}]">
           <div v-for="(row) in squares" :key="row.id" class="d-flex">
             <div v-for="(square) in row" :key="square.id" class="squareBox">
@@ -12,19 +12,23 @@
             </div>
           </div>
         </div>
-        <vueper-slides @slide="onSlideChange" class="no-shadow" :bullets="false" style="width: 80%;max-width: 100%;" :dragging-distance="10" transition-speed="250" ref="vueperSlides">
+        <vueper-slides @slide="onSlideChange" class="no-shadow slides" :bullets="false" :dragging-distance="10"
+          transition-speed="250" ref="vueperSlides">
           <vueper-slide v-for="(customization, name) in customizations" :key="name" :content="name"></vueper-slide>
         </vueper-slides>
         <div>
           <div v-if="currentUi.state === 'unlocked' || currentUi.state === 'currentlyUsed'" @click="selectUi()">
-            <div class="container test" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}" :class="{active : currentUi.state == 'currentlyUsed'}">
+            <div class="container test"
+              :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}"
+              :class="{active : currentUi.state == 'currentlyUsed'}">
               <span class="text">Appliquer</span>
               <span class="icon-check ok"></span>
             </div>
           </div>
           <div v-else-if="currentUi.state === 'locked'">
-            <button class="btn animated" style="background:#e94948;border-bottom-color:#b00020" @click="e => e.target.classList.toggle('shake')">
-              {{ customizations[currentUi.name].starsRequired}} étoiles requises <span class="icon icon-lock" style="color:white;font-size:1em"></span>
+            <button class="btn animated" style="background:#e94948;border-bottom-color:#b00020"
+              @click="e => e.target.classList.toggle('shake')">
+              {{ customizations[currentUi.name].starsRequired}} étoiles requises <span class="icon icon-lock"></span>
             </button>
           </div>
         </div>
@@ -35,17 +39,9 @@
 
 <script>
 import NavBar from './NavBar.vue';
-import {
-  mapState,
-  mapMutations
-} from 'vuex'
-import {
-  customization
-} from '../customization.js'
-import {
-  VueperSlides,
-  VueperSlide
-} from 'vueperslides'
+import { mapState, mapMutations } from 'vuex'
+import { customization } from '../customization.js'
+import { VueperSlides, VueperSlide } from 'vueperslides'
 import 'vueperslides/dist/vueperslides.css'
 
 export default {
@@ -86,13 +82,13 @@ export default {
     },
     ...mapState([
       'userInterface',
-      'stars'
+      'stars',
     ])
 
   },
   methods: {
     ...mapMutations([
-      'setUserInterface'
+      'setUserInterface',
     ]),
     selectUi: function () {
       let ui = JSON.stringify(this.userInterface);
@@ -104,6 +100,7 @@ export default {
       let localStorageUi = JSON.parse(localStorage.userInterface);
       this.setUserInterface(ui);
       this.currentUi.state = '';
+      //define the state of the ui rendered to render the proper button
       if (ui.index == localStorageUi.index) {
         this.currentUi.state = 'currentlyUsed'
         this.currentUi.name = params.currentSlide.content;
@@ -117,12 +114,12 @@ export default {
     },
     generateSquares: function () {
       let squares = new Array();
-      let count = 0; // To remove if square.id is not used in the program
       for (let i = 0; i < Math.round(Math.sqrt(this.pieceNumber)); i++) {
         squares[i] = new Array();
         for (let j = 0; j < Math.round(Math.sqrt(this.pieceNumber)); j++) {
-          squares[i][j] = {isOccupied: true}
-          count++;
+          squares[i][j] = {
+            isOccupied: true
+          }
         }
       }
       return squares;
@@ -130,7 +127,7 @@ export default {
 
   },
   destroyed: function () {
-    //cause of a "bug" causing slide event to trigger when going to coverScreen
+    //because of a "bug" causing slide event to trigger when going to coverScreen
     this.setUserInterface(JSON.parse(localStorage.userInterface));
   }
 }
@@ -138,8 +135,26 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.icon-lock {
+  color: white;
+  font-size: 1em
+}
+
+.container-fluid {
+  height: 100%;
+}
+
+.wrapper {
+  height: 100%;
+}
+
+.slides {
+  width: 80%;
+  max-width: 100%;
+}
 
 #customizationPage {
+  height: 100%;
   color: white;
   text-transform: uppercase;
   font-family: 'Montserrat', 'Arial', 'Helvetica', 'sans-serif';
@@ -180,7 +195,6 @@ a {
 
 .squareBox {
   margin: 2px;
-  perspective: 1000px;
   width: 36px;
   height: 36px;
 

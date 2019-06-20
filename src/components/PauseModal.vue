@@ -4,7 +4,7 @@
       <div class="modal-mask">
         <div class="chronoWrapper row d-flex align-items-center">
           <div class="chrono">
-            <p>{{ chrono.toString }} <span style="margin: 0px 10px 0px 10px">|</span> {{ stars }} <span class="icon icon-star"></span></p>
+            <p>{{ chrono.toString }} <span class="pipe">|</span> {{ stars }} <span class="icon icon-star"></span></p>
           </div>
         </div>
         <div class="modal-wrapper">
@@ -27,7 +27,6 @@ export default {
   name: 'PauseModal',
   computed: {
     ...mapState([
-      'status',
       'chrono',
       'stars'
     ])
@@ -37,14 +36,17 @@ export default {
       'setStatus',
     ]),
     back: function () {
-        this.setStatus('IN GAME');
-    }   
+      this.setStatus('IN GAME');
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.pipe {
+  margin: 0px 10px 0px 10px;
+}
 
 .chrono {
   color: white;
@@ -52,16 +54,14 @@ export default {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-
 }
 
 .chronoWrapper {
+  bottom: 0;
   width: 100%;
   height: 40px;
-  position:fixed;
+  position: fixed;
   opacity: 1;
-  /* background: #5e4238; */
-  /* box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); */
 }
 
 .modal-mask {
@@ -91,20 +91,20 @@ export default {
 .modal-header {
   font-size: 3em;
   color: #ffffff;
-  text-align:center;
+  text-align: center;
   text-transform: uppercase;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .modal-body {
   font-size: 10em;
   color: #ffffff;
-  text-align:center;
+  text-align: center;
 }
 
 .modal-footer {
   color: #ffffff;
-  text-align:center;
+  text-align: center;
   text-transform: uppercase;
 }
 
@@ -126,7 +126,7 @@ export default {
   box-shadow: inset 0 -2px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   outline: none;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
 /*

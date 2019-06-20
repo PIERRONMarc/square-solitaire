@@ -15,8 +15,11 @@
             </p>
           </div>
           <div class="modal-footer d-flex flex-row">
-            <button @click="restartGame" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Rejouer</button>
-            <button style="margin-left:30px" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Noter l'app</button>
+            <button @click="restartGame"
+              :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Rejouer</button>
+            <!-- <button style="margin-left:30px"
+              :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Noter
+              l'app</button> -->
           </div>
         </div>
       </div>
@@ -27,13 +30,13 @@
 <script>
 
 import {mapState, mapMutations} from 'vuex';
-// require('canvas-confetti');
+import confetti from 'canvas-confetti';
 
 export default {
   name: 'VictoryModal',
   data: function () {
     return {
-      idIntervalConfetti: null
+      idIntervalConfetti: null //to stop confetti when leaving the modal
     }
   },
   computed: {
@@ -56,12 +59,10 @@ export default {
   },
   mounted: function () {
     let end = Date.now() + (15 * 1000);
-
     this.idIntervalConfetti = setInterval(function () {
       if (Date.now() > end) {
         return clearInterval(this.idIntervalConfetti);
       }
-
       confetti({
         startVelocity: 25,
         spread: 360,
@@ -84,7 +85,7 @@ export default {
 
 .ribbon {
   font-family: 'Montserrat', 'Arial', 'Helvetica', 'sans-serif';
-  font-size: 20px!important;
+  font-size: 20px !important;
   text-transform: uppercase;
   letter-spacing: 1px;
   width: 70%;
@@ -138,10 +139,10 @@ export default {
   border-width: 1em 1em 0 0
 }
 
-/* RIBBON */
+/* </RIBBON> */
 
-.icon{
-  margin-right:30px;
+.icon {
+  margin-right: 30px;
 }
 
 .modal-mask {
@@ -162,7 +163,7 @@ export default {
 
 .modal-container {
   width: 100%;
-  height:100%;
+  height: 100%;
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
@@ -170,21 +171,21 @@ export default {
 .modal-header {
   font-size: 3em;
   color: #ffffff;
-  text-align:center;
-  font-weight:bold;
-  width:100%;
+  text-align: center;
+  font-weight: bold;
+  width: 100%;
 }
 
 .modal-body {
   font-family: 'Montserrat', 'Arial', 'Helvetica', 'sans-serif';
   font-size: 1.5em;
   color: #ffffff;
-  text-align:left;
+  text-align: left;
 }
 
 .modal-footer {
   color: #ffffff;
-  text-align:center;
+  text-align: center;
   text-transform: uppercase;
 }
 
@@ -201,7 +202,7 @@ export default {
   border-radius: 4px;
   border-bottom-color: #5e4238;
   outline: none;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); 
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   margin-top: 35px;
 }
 

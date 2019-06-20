@@ -13,15 +13,31 @@ export const store = new Vuex.Store({
             idInterval: 0,
             running: false,
         },
-        stars:0,
+        stars: 0,
+        lastAddedStars: {
+            numbler: 0,
+            show: false
+        },
         userInterface: null,
+        prevRoute: null
     },
     mutations: {
-        setUserInterface(state, payload){
+        setUserInterface(state, payload) {
             state.userInterface = payload;
         },
-        addStars(state, payload){
+        addStars(state, payload) {
             state.stars = state.stars + payload;
+        },
+        setLastAddedStars(state, payload) {
+            // state.lastAddedStars = 0;
+            // console.log(payload)
+            if (payload != 0 && payload != 24) {
+                state.lastAddedStars.number = payload;
+                state.lastAddedStars.show = true;
+                setTimeout(() => {
+                    state.lastAddedStars.show = false;
+                }, 1000)
+            }
         },
         setStatus(state, payload) {
             state.status = payload;
@@ -39,7 +55,7 @@ export const store = new Vuex.Store({
                     let seconds = state.chrono.seconds;
 
                     state.chrono.toString = minutes + ' : ' + seconds;
-
+                    //put a 0 when & where needed
                     if (minutes < 10) {
                         state.chrono.toString = '0' + minutes + ' : ' + seconds;
                     }
@@ -50,7 +66,6 @@ export const store = new Vuex.Store({
                         state.chrono.toString = '0' + minutes + ' : 0' + seconds;
                     }
                 }, 1000);
-
             }
         },
         resetChrono(state) {
@@ -61,7 +76,7 @@ export const store = new Vuex.Store({
         stopChrono(state) {
             state.chrono.running = false;
             clearInterval(state.chrono.idInterval);
-            if(state.status != 'WIN' && state.status != 'PAUSE'){
+            if (state.status != 'WIN' && state.status != 'PAUSE') {
                 this.commit('resetChrono');
             }
         }

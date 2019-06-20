@@ -1,8 +1,8 @@
 <template>
-  <div class="container-fluid rankedBoard" style="height:100%">
-    <NavBar typeNavBar="rankedBar" />
+  <div class="container-fluid rankedBoard">
+    <NavBar typeNavBar="rankedBar" title="Mes records" />
     <div v-if="rank !== null">
-      <div class="row" style="margin-top:8%;">
+      <div class="row">
         <div class="col d-flex justify-content-center">
           <h2></h2>
         </div>
@@ -15,7 +15,8 @@
       </div>
       <div v-for="(r, index) in rank" :key="r.id">
         <div class="row record"
-          :class="{ 'background-first' : index == 0, 'background-second' : index == 1, 'background-third': index == 2}" :style="[index > 2 ? {background: userInterface.pDarkColor}:null]">
+          :class="{ 'background-first' : index == 0, 'background-second' : index == 1, 'background-third': index == 2}"
+          :style="[index > 2 ? {background: userInterface.pDarkColor}:null]">
           <div class="col d-flex justify-content-center">
             #{{index + 1}}
           </div>
@@ -28,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div v-else style="height:100%;" class="d-flex flex-column justify-content-center align-items-center">
+    <div v-else class="rankedBoard d-flex flex-column justify-content-center align-items-center">
       <p style="text-transform:none;">Tu n'as toujours pas gagné..</p>
     </div>
   </div>
@@ -46,7 +47,7 @@ export default {
       rank: []
     }
   },
-  components:{
+  components: {
     NavBar
   },
   computed: {
@@ -55,22 +56,23 @@ export default {
     ])
   },
   mounted: function () {
-    if(localStorage.rank != null){
+    if (localStorage.rank != null) {
       this.rank = JSON.parse(localStorage.rank);
-      this.rank.sort(function(a, b) {
-        if(a.chrono.minutes < b.chrono.minutes){
+      //sort ranks by best time
+      this.rank.sort(function (a, b) {
+        if (a.chrono.minutes < b.chrono.minutes) {
           return -1;
-        }else if(a.chrono.minutes > b.chrono.minutes){
+        } else if (a.chrono.minutes > b.chrono.minutes) {
           return 1;
-        }else if(a.chrono.seconds < b.chrono.seconds){
+        } else if (a.chrono.seconds < b.chrono.seconds) {
           return -1;
-        }else if(a.chrono.seconds > b.chrono.seconds){
+        } else if (a.chrono.seconds > b.chrono.seconds) {
           return 1;
-        }else{
+        } else {
           return 0;
         }
       });
-    }else{
+    } else {
       this.rank = null;
     }
   }
@@ -85,31 +87,28 @@ export default {
   transform: translateX(-50%);
 }
 
-.background-first{
+.background-first {
   background: #ffd700;
 }
 
-.background-second{
+.background-second {
   background: #C0C0C0;
 }
 
-.background-third{
+.background-third {
   background: #cd7f32;
 }
 
-.rankedBoard{
-  color:white;
+.rankedBoard {
+  height: 100%;
   text-transform: uppercase;
-  font-family: 'Montserrat', 'Arial', 'Helvetica', 'sans-serif';
-  /* font-weight:normal; */
 }
 
-.record{
-  padding:4px;
-  margin:7px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-  border-radius:3px;
+.record {
+  padding: 4px;
+  margin: 7px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  border-radius: 3px;
 }
 
 </style>

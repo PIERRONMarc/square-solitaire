@@ -1,12 +1,12 @@
 <template>
-  <div class="container-fluid" style="height:100%">
+  <div class="container-fluid">
     <transition name="modal">
       <VictoryModal v-if="showVictoryModal" />
       <PauseModal v-if="showPauseModal" />
     </transition>
-    <div id="gamePage" :class="{ blur : showVictoryModal || showPauseModal}" style="height:100%">
+    <div id="gamePage" :class="{ blur : showVictoryModal || showPauseModal}">
       <NavBar typeNavBar="gameBar" />
-      <div class="d-flex justify-content-center align-items-center flex-column" style="height:80%">
+      <div class="d-flex justify-content-center align-items-center flex-column boardWrapper">
         <div class="boardBox d-flex" :style="[boardBoxClass, {background: userInterface.boardBackground}]">
           <div v-for="(row) in squares" :key="row.id" class="d-flex">
             <div v-for="(square) in row" :key="square.id" class="squareBox">
@@ -47,7 +47,6 @@ export default {
     PauseModal,
     NavBar
   },
-  //Only for dev purpose
   mounted: function () {
     this.setStatus('INIT');
     // this.setStatus('WIN');
@@ -67,7 +66,6 @@ export default {
       'chrono',
       'stars',
       'userInterface',
-      'winningStars'
     ])
 
   },
@@ -79,83 +77,101 @@ export default {
         this.showVictoryModal = false;
         this.squares = this.generateSquares();
         //adding reward
-        if(this.pieceLeft != null){
+        if (this.pieceLeft != null) {
           let stars = this.pieceNumber - this.pieceLeft;
-          if(this.pieceLeft != 1){
+          if (this.pieceLeft != 1) {
             this.addStars(stars);
+            this.setLastAddedStars(stars);
           }
-          localStorage.stars = JSON.stringify(this.stars); 
+          localStorage.stars = JSON.stringify(this.stars);
         }
         this.pieceLeft = this.pieceNumber;
         this.setStatus('FIRST CLICK');
       }
-      if(this.status == 'WIN'){
+      if (this.status == 'WIN') {
         this.addStars(100);
-        localStorage.stars = JSON.stringify(this.stars); 
+        localStorage.stars = JSON.stringify(this.stars);
         this.showVictoryModal = true;
+        //set up the rank
         let date = new Date();
+        //because getMonth acts weirdly
+        let month = date.getMonth() + 1;
+        if(month < 10){
+          month = '0' + month;
+        }
+        console.log(month);
         if (localStorage.rank == null) {
           let rank = [];
           rank.push({
-            date: date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear(),
+            date: date.getDate() + '/' + month + '/' + date.getFullYear(),
             chrono: {
               minutes: this.chrono.minutes,
               seconds: this.chrono.seconds,
               toString: this.chrono.toString
             }
           });
-          // localStorage.setItem("rank", JSON.stringify(rank));
           localStorage.rank = JSON.stringify(rank);
         } else {
           let rank = JSON.parse(localStorage.rank);
           rank.push({
-            date: date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear(),
+            date: date.getDate() + '/' + month + '/' + date.getFullYear(),
             chrono: {
               minutes: this.chrono.minutes,
               seconds: this.chrono.seconds,
               toString: this.chrono.toString
             }
           });
-          // console.log(rank)
+          //sort the rank to keep the top 10
+          rank.sort(function (a, b) {
+            if (a.chrono.minutes < b.chrono.minutes) {
+              return -1;
+            } else if (a.chrono.minutes > b.chrono.minutes) {
+              return 1;
+            } else if (a.chrono.seconds < b.chrono.seconds) {
+              return -1;
+            } else if (a.chrono.seconds > b.chrono.seconds) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+          rank = rank.slice(0, 10);
           localStorage.setItem("rank", JSON.stringify(rank));
         }
       }
-      if(this.status == 'PAUSE'){
+      if (this.status == 'PAUSE') {
         this.showPauseModal = true;
         this.stopChrono();
       }
-      if(this.status == 'IN GAME'){
-        if(this.pieceLeft == this.pieceNumber){
+      if (this.status == 'IN GAME') {
+        if (this.pieceLeft == this.pieceNumber) {
           this.setStatus('FIRST CLICK');
         }
         this.showPauseModal = false;
         this.runChrono();
       }
     },
-    pieceLeft(){
-      if(this.pieceLeft == 1){
+    pieceLeft() {
+      if (this.pieceLeft == 1) {
         this.setStatus('WIN');
         this.stopChrono();
-       
       }
     }
   },
   methods: {
-   ...mapMutations([
-     'setStatus',
-     'runChrono',
-     'stopChrono',
-     'addStars'
-   ]),
-  //  pause: function() {
-  //    this.setStatus('PAUSE');
-  //  },
-    restartGame: function(){
+    ...mapMutations([
+      'setStatus',
+      'runChrono',
+      'stopChrono',
+      'addStars',
+      'setLastAddedStars'
+    ]),
+    Game: function () {
       this.setStatus('INIT');
     },
     // When a square is clicked
     selectSquare: function (square) {
-     
+
       // Remove the first piece clicked
       if (this.status == 'FIRST CLICK') {
         square.isOccupied = false;
@@ -172,46 +188,46 @@ export default {
           square.isSelected = true;
           this.showPossibleMoves(square);
           this.lastSquareSelected = square;
-        } else if(square.isOccupied == false && square.isPossibleMove == false){
+        } else if (square.isOccupied == false && square.isPossibleMove == false) {
           this.resetPossibleMoves();
         }
-        if(square.isPossibleMove == true){
+        if (square.isPossibleMove == true) {
           this.makeMove(this.lastSquareSelected, square);
         }
       }
     },
+    // Reset possible move from last click if there was 
     resetPossibleMoves: function () {
-      // Reset possible move from last click if there was 
-      if(this.lastPossibleMoves.length > 0){
+      if (this.lastPossibleMoves.length > 0) {
         this.lastPossibleMoves.forEach(square => {
           this.squares[square.x_axis][square.y_axis].isPossibleMove = false;
         });
       }
       this.lastPossibleMoves = [];
     },
-    makeMove: function(fromSquare, toSquare){
+    makeMove: function (fromSquare, toSquare) {
       fromSquare.isOccupied = false;
       toSquare.isOccupied = true;
       toSquare.isPossibleMove = false;
       // If move is vertical
-      if(fromSquare.x_axis - toSquare.x_axis == 0 ){
+      if (fromSquare.x_axis - toSquare.x_axis == 0) {
         // If move is upward
-        if(fromSquare.y_axis - toSquare.y_axis == 2){
+        if (fromSquare.y_axis - toSquare.y_axis == 2) {
           this.squares[toSquare.x_axis][toSquare.y_axis + 1].isOccupied = false;
           this.pieceLeft--;
         } else { // If move is downward
           this.squares[toSquare.x_axis][toSquare.y_axis - 1].isOccupied = false;
           this.pieceLeft--;
-        } 
+        }
       } else { // If move is horizontal
         //If move is left side
-        if(fromSquare.x_axis - toSquare.x_axis == 2){
+        if (fromSquare.x_axis - toSquare.x_axis == 2) {
           this.squares[toSquare.x_axis + 1][toSquare.y_axis].isOccupied = false;
           this.pieceLeft--;
         } else { // If move is right side
           this.squares[toSquare.x_axis - 1][toSquare.y_axis].isOccupied = false;
           this.pieceLeft--;
-        } 
+        }
       }
       this.resetPossibleMoves();
     },
@@ -258,6 +274,18 @@ export default {
       return squares;
     }
 
+  },
+  //add reward for the current game when leaving the page
+  beforeRouteLeave  (to, from, next) {
+    if (this.pieceLeft != null) {
+      let stars = this.pieceNumber - this.pieceLeft;
+      if (this.pieceLeft != 1) {
+        this.addStars(stars);
+        this.setLastAddedStars(stars);
+      }
+      localStorage.stars = JSON.stringify(this.stars);
+    }
+    next();
   }
 }
 </script>
@@ -265,56 +293,54 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+#gamePage {
+  height: 100%;
+}
+
+.container-fluid {
+  height: 100%;
+}
+
+.boardWrapper {
+  height: 100%;
+}
+
 .blur {
-  filter:blur(15px);
-  /* transition-duration: .3s ease; */
+  filter: blur(15px);
 }
 
-.pause {
-  color:white;
-  font-size:5em;
-  text-align:center;
-}
-
-.boxWrapper {
-  width: 100%;
-  height: 476px;
-}
 .boardBox {
   flex-wrap: wrap;
-  /* background: #5e4238; */
-  /* background: url("../assets/wood.png"); */
-  background: url("../assets/wood/1.jpg");
-  border-radius:5%;
+  border-radius: 5%;
   padding: 10px;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
+
 .squareBox {
   margin: 2px;
-  perspective: 1000px;
   width: 36px;
   height: 36px;
-  
+
 }
+
 .squareBox .square {
   height: 100%;
-  border-radius:10%;
+  border-radius: 10%;
 }
-.background-default {
-  /* background: #bd9b8f; */
-  background: url("../assets/wood/1.1.jpg");
-}
+
 .background-selected {
   background: #ffbb33;
 }
+
 .background-possibleMove {
   background: #00C851;
 }
+
 .squareBox .square .piece {
   border-radius: 50%;
   width: 50%;
   height: 50%;
-  margin:auto;
+  margin: auto;
   background: white;
 }
 </style>
