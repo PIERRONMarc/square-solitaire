@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div id="customizationPage">
       <NavBar typeNavBar="customizationBar" title="Personnalisation" />
-      <div class="d-flex justify-content-center align-items-center flex-column flex-wrap wrapper">
+      <div class="d-flex justify-content-around align-items-center flex-column flex-wrap wrapper">
         <div class="boardBox d-flex" :style="[boardBoxClass, {background: userInterface.boardBackground}]">
           <div v-for="(row) in squares" :key="row.id" class="d-flex">
             <div v-for="(square) in row" :key="square.id" class="squareBox">
@@ -146,6 +146,8 @@ export default {
 
 .wrapper {
   height: 100%;
+  padding-bottom:20%;
+  padding-top:20%
 }
 
 .slides {

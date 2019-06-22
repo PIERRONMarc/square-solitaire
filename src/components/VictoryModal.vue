@@ -17,9 +17,9 @@
           <div class="modal-footer d-flex flex-row">
             <button @click="restartGame"
               :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Rejouer</button>
-            <!-- <button style="margin-left:30px"
+            <a v-bind:href=" 'market://details?id=' + pkgname" ><button style="margin-left:30px"
               :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">Noter
-              l'app</button> -->
+              l'app</button></a>
           </div>
         </div>
       </div>
@@ -36,7 +36,8 @@ export default {
   name: 'VictoryModal',
   data: function () {
     return {
-      idIntervalConfetti: null //to stop confetti when leaving the modal
+      idIntervalConfetti: null, //to stop confetti when leaving the modal
+      pkgname:null
     }
   },
   computed: {
@@ -55,7 +56,7 @@ export default {
       this.setStatus('INIT');
       this.resetChrono();
       clearInterval(this.idIntervalConfetti);
-    }
+    },
   },
   mounted: function () {
     let end = Date.now() + (15 * 1000);
@@ -74,6 +75,10 @@ export default {
         }
       });
     }, 200);
+    cordova.getAppVersion.getPackageName(pkgname => {
+      // com.companyname.appname
+      this.pkgname = pkgname;
+    });
   }
 }
 </script>

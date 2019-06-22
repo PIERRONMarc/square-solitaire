@@ -1,7 +1,7 @@
 export const customization = {
-    default: {
+    Standart: {
         index: 0,
-        name: 'Standart',
+        name: 'default',
         primaryColor: '#8c6d62',
         pDarkColor: '#5e4238',
         pLightColor: '#bd9b8f',

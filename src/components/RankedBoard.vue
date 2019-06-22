@@ -104,6 +104,9 @@ export default {
   text-transform: uppercase;
 }
 
+.record > div {
+  padding: 0 2px;
+}
 .record {
   padding: 4px;
   margin: 7px;

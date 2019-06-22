@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <NavBar typeNavBar="rankedBar" title="COMMENT JOUER" />
     <div class="row d-flex flex-column justify-content-center wrapper">
       <p>
@@ -33,7 +33,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.container {
+.container-fluid {
   height: 100%;
 }
 
@@ -43,7 +43,6 @@ export default {
 
 p {
   margin: 15px 20px 15px 20px;
-  text-align: justify;
 }
 
 a {

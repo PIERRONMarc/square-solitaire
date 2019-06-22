@@ -1,5 +1,5 @@
 <template>
-  <div class="coverScreen d-flex justify-content-center flex-column">
+  <div class="coverScreen ">
     <div>
       <div class="squareBox">
         <div class="square d-flex" :style="{'background': userInterface.squareBackground}">
@@ -8,40 +8,27 @@
       </div>
       <span class="title">Square Solitaire</span>
     </div>
-    <div>
-      <router-link to="/board">
-        <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
-          Nouvelle partie <span class="icon-keyboard_arrow_right"></span>
-        </button>
+    <div class="wrapper d-inline-flex justify-content-around flex-column">
+      <router-link to="/board" class="btn" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
+        Nouvelle partie <span class="icon-keyboard_arrow_right icon"></span>
       </router-link>
-    </div>
-    <div>
-      <router-link to="/ranked">
-        <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
-          Mes records <span class="icon-keyboard_arrow_right"></span>
-        </button>
+      <router-link to="/ranked" class="btn" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
+        Mes records <span class="icon-keyboard_arrow_right icon"></span>
       </router-link>
-    </div>
-    <div>
-      <router-link to="/customization">
-        <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
-          Customisation <span class="icon-keyboard_arrow_right"></span>
-        </button>
+      <router-link to="/customization" class="btn" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
+        Personnalisation <span class="icon-keyboard_arrow_right icon"></span>
       </router-link>
-    </div>
-    <div>
-      <router-link to="/rules">
-        <button :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
-          Comment jouer <span class="icon-keyboard_arrow_right"></span>
-        </button>
+      <router-link to="/rules" class="btn" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
+        Comment jouer <span class="icon-keyboard_arrow_right icon"></span>
       </router-link>
     </div>
   </div>
 </template>
 
 <script>
-
-  import { mapState } from 'vuex';
+  import {
+    mapState
+  } from 'vuex';
 
   export default {
     name: 'CoverScreen',
@@ -55,6 +42,15 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.icon {
+  float: right;
+}
+
+.wrapper {
+  padding-top: 10%;
+  height:90%;
+}
+
 .title {
   margin-left: 10px;
   font-size: 2em;
@@ -62,8 +58,6 @@
     0px 8px 13px rgba(0, 0, 0, 0.1),
     0px 18px 23px rgba(0, 0, 0, 0.1);
   margin-bottom: 10%;
-
-
 }
 
 .squareBox {
@@ -92,6 +86,9 @@
   color: #ffffff;
   text-align: center;
   height: 100%;
+  padding-bottom: 10%;
+  padding-top: 10%;
+  /* display:inline-flex; */
 }
 
 a {
@@ -99,22 +96,20 @@ a {
   color: #ffffff;
 }
 
-.coverScreen button {
-  margin-top: 35px;
-  width: 170px;
-  height: 50px;
+.btn {
+  /* font-family:arial; */
+  padding: 1rem;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: none;
+  background-color: #bd9b8f;
+  color: #fff;
   border: 1px solid #ccc;
   border-width: 0 0 2px 0;
   border-radius: 4px;
   border-bottom-color: #5e4238;
-  color: #fff;
-  background-color: #bd9b8f;
-  text-transform: uppercase;
-  text-align: center;
-  text-shadow: none;
-  line-height: 50px;
-  letter-spacing: 1px;
-  box-shadow: inset 0 -2px rgba(0, 0, 0, 0.3);
   outline: none;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
@@ -122,5 +117,4 @@ a {
 span {
   font-size: 1.1em;
 }
-
 </style>
