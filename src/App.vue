@@ -63,7 +63,7 @@ export default {
       this.addStars(JSON.parse(localStorage.stars));
     }
     if (localStorage.userInterface == null) {
-      let ui = JSON.stringify(customization.default)
+      let ui = JSON.stringify(customization.Standard)
       localStorage.userInterface = ui;
     }
     this.setUserInterface(JSON.parse(localStorage.userInterface));

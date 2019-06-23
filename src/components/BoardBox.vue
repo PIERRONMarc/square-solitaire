@@ -99,7 +99,6 @@ export default {
         if(month < 10){
           month = '0' + month;
         }
-        console.log(month);
         if (localStorage.rank == null) {
           let rank = [];
           rank.push({

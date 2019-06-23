@@ -1,5 +1,5 @@
 export const customization = {
-    Standart: {
+    Standard: {
         index: 0,
         name: 'default',
         primaryColor: '#8c6d62',

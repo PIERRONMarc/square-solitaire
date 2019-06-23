@@ -1,6 +1,7 @@
 <template>
-  <div class="coverScreen ">
-    <div>
+  <div class="coverScreen">
+    <PrivacyPolicyConsent v-if="showPrivacyPolicyConsent" v-on:accepted="accepted"/>
+    <div :class="{ blur : showPrivacyPolicyConsent}">
       <div class="squareBox">
         <div class="square d-flex" :style="{'background': userInterface.squareBackground}">
           <div class="piece"></div>
@@ -8,7 +9,7 @@
       </div>
       <span class="title">Square Solitaire</span>
     </div>
-    <div class="wrapper d-inline-flex justify-content-around flex-column">
+    <div class="wrapper d-inline-flex justify-content-around flex-column" :class="{ blur : showPrivacyPolicyConsent}">
       <router-link to="/board" class="btn" :style="{background: userInterface.pLightColor, 'border-bottom-color': userInterface.pDarkColor}">
         Nouvelle partie <span class="icon-keyboard_arrow_right icon"></span>
       </router-link>
@@ -26,22 +27,45 @@
 </template>
 
 <script>
-  import {
-    mapState
-  } from 'vuex';
+  import { mapState } from 'vuex';
+
+  import PrivacyPolicyConsent from './PrivacyPolicyConsent.vue'
 
   export default {
     name: 'CoverScreen',
+    data: function(){
+      return{
+        showPrivacyPolicyConsent: null
+      }
+    },
     computed: {
       ...mapState([
         'userInterface'
       ])
+    },
+    components:{
+      PrivacyPolicyConsent
+    },
+    mounted:function(){
+      if(localStorage.PrivacyPolicyConsent == null){
+        this.showPrivacyPolicyConsent = true;
+      }
+    },
+    methods: {
+      accepted:function(){
+        this.showPrivacyPolicyConsent = false;
+      }
     }
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.blur {
+  filter: blur(15px);
+}
+
 .icon {
   float: right;
 }
@@ -65,13 +89,14 @@
   margin: 2px;
   width: 36px;
   height: 36px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  
 
 }
 
 .squareBox .square {
   height: 100%;
   border-radius: 10%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 .squareBox .square .piece {
