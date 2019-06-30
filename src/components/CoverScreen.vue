@@ -54,7 +54,9 @@
     methods: {
       accepted:function(){
         this.showPrivacyPolicyConsent = false;
-      }
+        
+      },
+      
     }
   }
 </script>

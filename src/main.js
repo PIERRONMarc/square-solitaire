@@ -57,13 +57,16 @@ const vueApp = new Vue({
     onDeviceReady: function () {
       // lock the device orientation because landscape is badly supported
       screen.orientation.lock('portrait')
-      this.showBannerAds();
+      if(localStorage.PrivacyPolicyConsent == 'true')
+      {
+        this.showBannerAds();
+      }
     },
     showBannerAds: function () {
       const bannerConfig = {
         id: 'ca-app-pub-8942917782695946/9712013613', //real id
         // id: 'ca-app-pub-3940256099942544/6300978111', //test id
-        // isTesting: true,
+        isTesting: true,
         autoShow: true,
         bannerAtTop:true
       }
