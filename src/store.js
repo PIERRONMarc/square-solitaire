@@ -76,9 +76,16 @@ export const store = new Vuex.Store({
         stopChrono(state) {
             state.chrono.running = false;
             clearInterval(state.chrono.idInterval);
-            if (state.status != 'WIN' && state.status != 'PAUSE') {
+            if (state.status != 'WIN' && state.status != 'PAUSE' && state.status != 'LOST') {
                 this.commit('resetChrono');
             }
+        },
+        stopAndResetChrono(state){
+            state.chrono.seconds = 0;
+            state.chrono.minutes = 0;
+            state.chrono.toString = '00 : 00';
+            state.chrono.running = false;
+            clearInterval(state.chrono.idInterval);
         }
     }
 })

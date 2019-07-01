@@ -34,8 +34,10 @@ export default {
   methods: {
     ...mapMutations([
       'setStatus',
+      'runChrono'
     ]),
     back: function () {
+      this.runChrono();
       this.setStatus('IN GAME');
     }
   }
@@ -46,6 +48,10 @@ export default {
 <style scoped>
 .pipe {
   margin: 0px 10px 0px 10px;
+}
+
+p{
+  margin:0;
 }
 
 .chrono {

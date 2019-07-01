@@ -11,7 +11,7 @@
     <div v-if="typeNavBar == 'gameBar'" class="navBar row d-flex justify-content-between align-items-center"
       :style="{background: userInterface.pDarkColor}">
       <div>
-        <router-link to="/"><span class="icon-keyboard_arrow_left back" @click="stopChrono"></span>
+        <router-link to="/"><span class="icon-keyboard_arrow_left back" @click="stopAndResetChrono"></span>
         </router-link>
       </div>
       <div class="title">
@@ -77,10 +77,12 @@ export default {
     ...mapMutations([
       'setStatus',
       'resetChrono',
-      'stopChrono'
+      'stopChrono',
+      'stopAndResetChrono'
     ]),
     restartGame: function () {
       this.setStatus('INIT');
+      this.stopChrono();
       this.resetChrono();
     },
     pause: function () {

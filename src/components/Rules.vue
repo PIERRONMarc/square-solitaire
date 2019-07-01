@@ -3,8 +3,9 @@
     <NavBar typeNavBar="rankedBar" title="COMMENT JOUER" />
     <div class="row d-flex flex-column justify-content-center wrapper">
       <p>
-        Commencez par choisir lequel de vos pions vous voulez retirer du jeu. Puis déplacez-les horizontalement ou
-        verticalement dans le but de n'en avoir plus qu'un seul.
+        <!-- Commencez par choisir lequel de vos pions vous voulez retirer du jeu. Puis déplacez-les horizontalement ou
+        verticalement dans le but de n'en avoir plus qu'un seul. -->
+        Pour jouer, commencez par choisir lequel de vos pions vous voulez retirer du jeu. Pour supprimer des pions, il faut que deux pions soient adjacents et suivis d'une case vide. Le premier pion « saute » par-dessus le deuxième et rejoint la case vide. Le deuxième pion est alors retiré du plateau. Un pion ne peut sauter qu'horizontalement ou verticalement, et un seul pion à la fois. Vous gagnez quand il n'en reste plus qu'un seul.
       </p>
       <p>
         Pour chaque pion retiré du jeu vous gagné une étoile. Les étoiles servent à débloquer de nouvelles <router-link

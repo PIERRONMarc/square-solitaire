@@ -38,7 +38,7 @@ export default {
       const bannerConfig = {
         id: 'ca-app-pub-8942917782695946/9712013613', //real id
         // id: 'ca-app-pub-3940256099942544/6300978111', //test id
-        isTesting: true,
+        // isTesting: true,
         autoShow: true,
         bannerAtTop: true
       }

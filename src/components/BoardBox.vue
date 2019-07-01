@@ -5,13 +5,17 @@
       <PauseModal v-if="showPauseModal" />
     </transition>
     <div id="gamePage" :class="{ blur : showVictoryModal || showPauseModal}">
-      <NavBar typeNavBar="gameBar" />
+      <NavBar typeNavBar="gameBar"/>
       <div class="d-flex justify-content-center align-items-center flex-column boardWrapper">
+         <transition name="router-anim" mode="out-in" enter-active-class="animated zoomIn"
+      leave-active-class="animated zoomOut">
+      <div v-show="status == 'LOST'" class="lost">Aucune solutions possibles..</div>
+    </transition>
         <div class="boardBox d-flex" :style="[boardBoxClass, {background: userInterface.boardBackground}]">
           <div v-for="(row) in squares" :key="row.id" class="d-flex">
             <div v-for="(square) in row" :key="square.id" class="squareBox">
               <div class="square d-flex" @click="selectSquare(square)"
-                :style="[square.isSelected ? {'background': '#ffbb33'}:{'background': userInterface.squareBackground},square.isPossibleMove ? {'background': '#00C851'}:'' ]">
+                :style="[square.cannotMove ? {'background': '#e94948'}:square.isSelected ? {'background': '#ffbb33'}:{'background': userInterface.squareBackground},square.isPossibleMove ? {'background': '#00C851'}:'' ]">
                 <div :class="{ piece : square.isOccupied}"></div>
               </div>
             </div>
@@ -70,10 +74,10 @@ export default {
 
   },
   watch: {
-    //Status of the app
+    //Status of the game
     status() {
       if (this.status == 'INIT') {
-        this.runChrono();
+        // this.runChrono();
         this.showVictoryModal = false;
         this.squares = this.generateSquares();
         //adding reward
@@ -99,10 +103,15 @@ export default {
         if(month < 10){
           month = '0' + month;
         }
+        let day = date.getDate();
+        if(day < 10)
+        {
+          day = '0' + day;
+        }
         if (localStorage.rank == null) {
           let rank = [];
           rank.push({
-            date: date.getDate() + '/' + month + '/' + date.getFullYear(),
+            date: day + '/' + month + '/' + date.getFullYear(),
             chrono: {
               minutes: this.chrono.minutes,
               seconds: this.chrono.seconds,
@@ -113,7 +122,7 @@ export default {
         } else {
           let rank = JSON.parse(localStorage.rank);
           rank.push({
-            date: date.getDate() + '/' + month + '/' + date.getFullYear(),
+            date: day + '/' + month + '/' + date.getFullYear(),
             chrono: {
               minutes: this.chrono.minutes,
               seconds: this.chrono.seconds,
@@ -138,19 +147,40 @@ export default {
           localStorage.setItem("rank", JSON.stringify(rank));
         }
       }
+      //set up the pause
       if (this.status == 'PAUSE') {
         this.showPauseModal = true;
         this.stopChrono();
       }
       if (this.status == 'IN GAME') {
+        //set up the first piece to remove
         if (this.pieceLeft == this.pieceNumber) {
           this.setStatus('FIRST CLICK');
+          //in case the game has been paused during the 'FIRST CLICK' status
+          this.stopChrono();
+          this.resetChrono();
         }
         this.showPauseModal = false;
-        this.runChrono();
+        // this.runChrono();
+      }
+      //color all pieces background in red
+      if(this.status == 'LOST'){
+        this.stopChrono();
+        this.squares.forEach(column => {
+          column.forEach(square => {
+            if(square.isOccupied == true){
+              square.cannotMove = true;
+            }
+          })
+        })
       }
     },
     pieceLeft() {
+      //Check if the game is lost after a move
+      if(this.status != 'FIRST CLICK'){
+        this.checkLost();
+      }
+      //Win condition
       if (this.pieceLeft == 1) {
         this.setStatus('WIN');
         this.stopChrono();
@@ -162,6 +192,7 @@ export default {
       'setStatus',
       'runChrono',
       'stopChrono',
+      'resetChrono',
       'addStars',
       'setLastAddedStars'
     ]),
@@ -176,12 +207,14 @@ export default {
         square.isOccupied = false;
         this.pieceLeft--;
         this.setStatus('IN GAME');
+        this.runChrono();
         return true;
       }
       if (this.status == 'IN GAME') {
         // Unselect the last square
         if (this.lastSquareSelected != null) {
           this.lastSquareSelected.isSelected = false;
+          this.lastSquareSelected.cannotMove = false;
         }
         if (square.isOccupied == true) {
           square.isSelected = true;
@@ -252,6 +285,39 @@ export default {
         this.squares[square.x_axis][square.y_axis - 2].isPossibleMove = true;
         this.lastPossibleMoves.push(this.squares[square.x_axis][square.y_axis - 2]);
       }
+      if(this.lastPossibleMoves.length == 0){
+        square.cannotMove = true;
+      }
+    },
+    //Check if the game is lost
+    checkLost: function(){
+      let lost = true;
+      this.squares.forEach(column => {
+        // if none of the moves is possible for all squares, then the game is lost
+        column.forEach(square => {
+          if(square.isOccupied == true){
+            // If x-axis +2 exist AND is not occupied AND there is a square between them
+            if (Array.isArray(this.squares[square.x_axis + 2]) && typeof this.squares[square.x_axis + 2][square.y_axis] != undefined && this.squares[square.x_axis + 2][square.y_axis].isOccupied == false && this.squares[square.x_axis + 1][square.y_axis].isOccupied == true) {
+              lost = false;
+            }
+            // If x-axis -2 exist AND is not occupied AND there is a square between them
+            if (Array.isArray(this.squares[square.x_axis - 2]) && typeof this.squares[square.x_axis - 2][square.y_axis] != undefined && this.squares[square.x_axis - 2][square.y_axis].isOccupied == false && this.squares[square.x_axis - 1][square.y_axis].isOccupied == true) {
+              lost = false;
+            }
+            // If y-axis +2 exist AND is not occupied AND there is a square between them
+            if (this.squares[square.x_axis][square.y_axis + 2] != undefined && this.squares[square.x_axis][square.y_axis + 2].isOccupied == false && this.squares[square.x_axis][square.y_axis + 1].isOccupied == true) {
+              lost = false;
+            }
+            // If y-axis -2 exist AND is not occupied AND there is a square between them
+            if (this.squares[square.x_axis][square.y_axis - 2] != undefined && this.squares[square.x_axis][square.y_axis - 2].isOccupied == false && this.squares[square.x_axis][square.y_axis - 1].isOccupied == true) {
+              lost = false;
+            }
+          }
+        })
+      })
+      if(lost == true){
+        this.setStatus('LOST');
+      }
     },
     generateSquares: function () {
       let squares = new Array();
@@ -265,7 +331,8 @@ export default {
             x_axis: i,
             isOccupied: true,
             isSelected: false,
-            isPossibleMove: false
+            isPossibleMove: false,
+            cannotMove: false,
           }
           count++;
         }
@@ -291,6 +358,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.lost{
+  position:absolute;
+  top:0;
+  margin-top:15vh;
+}
 
 #gamePage {
   height: 100%;
