@@ -153,6 +153,10 @@ export default {
         this.stopChrono();
       }
       if (this.status == 'IN GAME') {
+        //in case pause is made while having lost
+        if(this.status != 'FIRST CLICK'){
+          this.checkLost();
+        }
         //set up the first piece to remove
         if (this.pieceLeft == this.pieceNumber) {
           this.setStatus('FIRST CLICK');
